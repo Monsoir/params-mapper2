@@ -1,0 +1,28 @@
+{
+  "name": "@monsoir/params-mapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "go-publish": "npm publish --access public",
+    "dev": "rm -fr ./dist && tsc -p tsconfig.dev.json",
+    "build": "rm -fr ./dist && tsc -p tsconfig.prod.json",
+    "example": "npm run dev && node ./example/index.js",
+    "test": "ts-mocha -p ./tsconfig.test.json ./test/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-mocha": "^2.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.1"
+  }
+}
