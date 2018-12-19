@@ -106,8 +106,13 @@ class ParamObject implements ITransformable {
            *   - optional -> throw
            *   - non-optional -> throw
            */
-          if (value && !optional) {
-            throw new Error(validationFailureMessage)
+          // if (value && !optional) {
+          //   throw new Error(validationFailureMessage)
+          // }
+          if (value) {
+            throw new Error(validationFailureMessage);
+          } else if (!optional) {
+            throw new Error(validationFailureMessage);
           }
         }
       }
