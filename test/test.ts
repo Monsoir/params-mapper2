@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import Validator from './Validator';
 
 import { TransformMetaInfoDict, createParamObjectWithMetaInfo } from '../lib';
+import { MsrTypeOf, MsrTypes } from '../lib/TypeOf';
 
 describe('Check if createParamObjectWithMetaInfo return a function', () => {
   let metaInfo: TransformMetaInfoDict;
@@ -194,6 +195,45 @@ describe('optional', () => {
   });
 });
 
+describe('optional param with validated and invalidated data', () => {
+  let optionalMetaInfo: TransformMetaInfoDict = null;
+  let falsyPayload = null;
+  let truthyPayload = null;
+  const shouldBeNumberValidator = $0 => MsrTypeOf($0) === MsrTypes.number;
+  beforeEach(() => {
+    optionalMetaInfo = {
+      id: {
+        paramKey: 'userid',
+        validator: shouldBeNumberValidator,
+        validationFailureMessage: 'id should be number',
+      },
+    };
+    falsyPayload = {
+      id: '1',
+    };
+    truthyPayload = {
+      id: 1,
+    };
+  });
+
+  it('optional param with invalidated data -> throw error', () => {
+    const createParamObject = createParamObjectWithMetaInfo(optionalMetaInfo);
+    const paramObject = createParamObject(falsyPayload);
+    try {
+      const params = paramObject.getParams();
+    } catch (e) {
+      expect(e.message).equals('id should be number');
+    }
+  });
+
+  it('optional param with validated data -> params has value', () => {
+    const createParamObject = createParamObjectWithMetaInfo(optionalMetaInfo);
+    const paramObject = createParamObject(truthyPayload);
+    const params = paramObject.getParams();
+    expect(params.userid).equals(1);
+  });
+});
+
 describe('reduce data', () => {
   let metaInfo: TransformMetaInfoDict = null;
   let payload = null;
@@ -207,7 +247,7 @@ describe('reduce data', () => {
     metaInfo = {
       ids: {
         paramKey: 'userids',
-        reducerRule: {
+        reduceRule: {
           reducers: [
             reduceRuleExtractId,
             reduceRuleId2String,

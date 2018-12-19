@@ -13,7 +13,7 @@ export type TransformMetaInfo = {
    * 
    * 转换方法的第一个参数为前一个转换方法结果，第二个参数为原始数据
    */
-  reducerRule?: {
+  reduceRule?: {
     reducers: ((acc: any, originValue: any) => any)[],
   };
 
@@ -80,9 +80,9 @@ class ParamObject implements ITransformable {
       const transformRule = metaInfo[currentKey];
 
       // 数据转换
-      const { reducerRule } = transformRule;
-      if (reducerRule) {
-        const { reducers } = reducerRule;
+      const { reduceRule } = transformRule;
+      if (reduceRule) {
+        const { reducers } = reduceRule;
         if (reducers && Array.isArray(reducers) && reducers.length > 0) {
           let reducedValue = value;
           reducers.forEach((ele) => {
@@ -97,8 +97,18 @@ class ParamObject implements ITransformable {
       if (validator) {
         const validated = validator(value);
         if (!validated) {
-          // 值为可选时才抛出异常
-          if (!optional) throw new Error(validationFailureMessage);
+          /**
+           * 校验失败的情况
+           * - 零值
+           *   - optional -> pass
+           *   - non-optional -> throw
+           * - 有值
+           *   - optional -> throw
+           *   - non-optional -> throw
+           */
+          if (value && !optional) {
+            throw new Error(validationFailureMessage)
+          }
         }
       }
 
