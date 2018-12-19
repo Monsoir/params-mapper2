@@ -71,7 +71,7 @@ import Validator from '$utils/Validator';
 
 // 1
 const getFromValue = $0 => $0.value;
-const extraId = $0 => $0.id;
+const extraId = $0 => ($0 || []).map(ele => ele.id);
 
 // 2
 const TransformMetaInfo = {
@@ -225,5 +225,25 @@ console.log(params);
 3. 使用 `try...catch` 包裹生成请求参数的流程 `paramObject.getParams()`, 验证失败时，将通过抛出异常进行通知
     - 同时中止正在进行的验证与转换工作，因为请求对象已经不符合要求，就没必要继续往下继续执行了
 4. 最后得到 params 对象，直接放到请求中
+
+最后得到的数据
+
+```json
+{
+  "userFounder": "0",
+  "account": "123",
+  "name": "13",
+  "organization": "xxxxxxx",
+  "status": "1",
+  "telephone": "xxxxxxxxxxx",
+  "email": "test@test.com",
+  "remark": "123",
+  "chosenRole": [
+    "1075217925478047746",
+    "1075217809077723137",
+    "1075217733278261250"
+  ]
+}
+```
 
 
